@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>抽奖</title>
+	    <script type="text/javascript">
+        ;(function(designWidth, maxWidth) {
+            var doc = document,
+            win = window,
+            docEl = doc.documentElement,
+            remStyle = document.createElement("style"),
+            tid;
+    
+            function refreshRem() {
+                var width = docEl.getBoundingClientRect().width;
+                maxWidth = maxWidth || 540;
+                width>maxWidth && (width=maxWidth)
+                var rem = width * 100 / designWidth;
+                remStyle.innerHTML = 'html{font-size:' + rem + 'px;}';
+            }
+    
+            if (docEl.firstElementChild) {
+                docEl.firstElementChild.appendChild(remStyle);
+            } else {
+                var wrap = doc.createElement("div");
+                wrap.appendChild(remStyle);
+                doc.write(wrap.innerHTML);
+                wrap = null;
+            }
+            //要等 wiewport 设置好后才能执行 refreshRem，不然 refreshRem 会执行2次；
+            refreshRem();
+    
+            win.addEventListener("resize", function() {
+                clearTimeout(tid); //防止执行两次
+                tid = setTimeout(refreshRem, 300);
+            }, false);
+    
+            win.addEventListener("pageshow", function(e) {
+                if (e.persisted) { // 浏览器后退的时候重新计算
+                    clearTimeout(tid);
+                    tid = setTimeout(refreshRem, 300);
+                }
+            }, false);
+    
+            if (doc.readyState === "complete") {
+                doc.body.style.fontSize = "16px";
+            } else {
+                doc.addEventListener("DOMContentLoaded", function(e) {
+                    doc.body.style.fontSize = "16px";
+                }, false);
+            }
+        })(750, 750);
+    </script>
+	<script type="text/javascript" src="http://114larc.com/static/js/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="http://114larc.com/static/js/YLMF.js"></script>
+<link href="/dist/css/styles.css?973881bc6d9d9f52ede6" rel="stylesheet"></head>
+<body>
+	<!--
+		1. 设置概率【显示哪个？】
+			1. 每个格子都需要设置概率 【服务端给 或者随机数】
+			2. 如何分别设置不同列的动画 【通过css动画】
+			3. 滚动速度设置 【】
+			4. 奖品与概率对应【礼品id对应后台的概率】
+			5. 如何计算根据概率设置之后的结果
+			6. 需要把每个格子显示的礼品跟排列显示的id对应起来
+			7. 后台根据概率返回 礼品对应的id值 【前端根据这个id显示出对应的奖品】
+			8. 抽奖次数
+
+			9. 每个列转动的次数 、
+			10. 每列至少转动多少次
+
+			11. 转动结束后的回调
+			12. 当前显示位置
+
+			13. 数据
+				1. 存储奖品的列表
+
+			14. 当前列是否正在转动
+
+			15. 概率计算
+				1. 同时显示三个相同物品的概率？【】
+					1. 同时显示三个相同物品的概率如何计算
+					2. 显示两个相同物品的概率 如何计算
+					3. 这样岂不是每一个物品显示出来的概率都一样了
+					4. 如果再为每个奖品单独设置概率 => 服务端提供奖品的概率 【必填】 => 计算出显示哪三个？【只是计算显示哪三个物品的id】=> 动画实现 => 显示
+				2. 计算某个奖品显示出来的概率？ 【暂时只设置某个物品显示出来的概率】
+					1. 只设置某种物品的显示概率？ 三个显示同样的概率会更低？
+
+				得到结论：
+				前端只需要知道显示哪三个物品对应的id 即可。
+
+		2. 设置动画 【竖向滚动动画】
+		3. 几个格子【横向排列】
+		4. 每个格子显示多少奖品【竖向排列】
+
+	 -->
+
+	<!-- DOM 结构 -->
+	<div class="m-ui-tiger">
+	  	<div class="item">
+		    <ul class="roller">
+				<li date-id="1">
+					<img src="/src/images/lottery/res_la.png" alt="">
+				</li>
+				<li date-id="2">
+					<img src="/src/images/lottery/res_diamond.png" alt="">
+				</li>
+				<li date-id="3">
+					<img src="/src/images/lottery/res_gift.png" alt="">
+				</li>
+				<li date-id="4">
+					<img src="/src/images/lottery/res_gold.png" alt="">
+				</li>
+				<li date-id="5">
+					<img src="/src/images/lottery/res_redpackets.png" alt="">
+				</li>
+		    </ul>
+	  	</div>
+	  	<div class="item">
+		    <ul class="roller">
+				<li date-id="1">
+					<img src="/src/images/lottery/res_la.png" alt="">
+				</li>
+				<li date-id="2">
+					<img src="/src/images/lottery/res_diamond.png" alt="">
+				</li>
+				<li date-id="3">
+					<img src="/src/images/lottery/res_gift.png" alt="">
+				</li>
+				<li date-id="4">
+					<img src="/src/images/lottery/res_gold.png" alt="">
+				</li>
+				<li date-id="5">
+					<img src="/src/images/lottery/res_redpackets.png" alt="">
+				</li>
+		    </ul>
+	  	</div>
+	  	<div class="item">
+		    <ul class="roller">
+				<li date-id="1">
+					<img src="/src/images/lottery/res_la.png" alt="">
+				</li>
+				<li date-id="2">
+					<img src="/src/images/lottery/res_diamond.png" alt="">
+				</li>
+				<li date-id="3">
+					<img src="/src/images/lottery/res_gift.png" alt="">
+				</li>
+				<li date-id="4">
+					<img src="/src/images/lottery/res_gold.png" alt="">
+				</li>
+				<li date-id="5">
+					<img src="/src/images/lottery/res_redpackets.png" alt="">
+				</li>
+		    </ul>
+	  	</div>
+	  	<div id="J_close-btn" class="lottery-close-btn"></div>
+	  	<div id="J_rocker" class="rocker"></div>
+	  	<a id="J_toggle" class="toggle-btn" href="javascript:;"></a>
+	</div>
+	<!-- DOM 结构 END -->
+<script type="text/javascript" src="/js/lotter_tiger.js?973881bc6d9d9f52ede6"></script></body>
+</html>
