@@ -208,9 +208,11 @@ var saveDataBase = function(count, cb, err) {
         },
         success: function (json) {
         	if (json.state == 1) {
-        		cb && cb(json);
+        		setTimeout(function() {
+        			cb && cb(json);
 
-        		if($('.lottery-popup').length) { $('.m-ui-tiger').remove() };
+        			if($('.lottery-popup').length) { $('.m-ui-tiger').remove() };
+				}, 1500);
         	} else {
         		alert(json.message);
         	}
@@ -227,7 +229,8 @@ var lotteryAlert = function(level) {
 		tpl.setAttribute('class', 'lottery-popup');
 		tpl.classList.add(level);
 
-		$(tpl).html('<div id="J_close-btn" class="lottery-close-btn"></div>')
+		$(tpl).html('<div id="J_close-btn" class="lottery-close-btn"></div>');
+
 	document.body.appendChild(tpl);
 };
 
@@ -301,8 +304,7 @@ lottery.on('end', function (opt) {
 		$self.addClass('active');
 	})
 
-	$('.page-wrap.lottery').on('click', '.lottery-close-btn', function() {
-		alert(111)
+	$('body').on('click', '.lottery-close-btn', function() {
 		if(window.Js114la && Js114la.homeadClose) {
 			window.Js114la.homeadClose();
 		}
