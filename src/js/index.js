@@ -168,7 +168,7 @@ class LotteryTiger extends Events {
 	}
 
 	draw() {
-		if(YLMF.isLogin()) {
+		if(!YLMF.isLogin()) {
 			if (this.toggle.classList.contains('z-active')) { return};
 			if (this.has('start')) { this.trigger('start') };
 			this._startTime = (new Date()).getTime();
